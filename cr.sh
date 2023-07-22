@@ -308,7 +308,7 @@ package_chart() {
   if [[ -n "$config" ]]; then
     args+=(--config "$config")
   fi
-
+  echo "Package args: ${args[*]}"
   echo "Packaging chart '$chart'..."
   cr package "${args[@]}"
 }
