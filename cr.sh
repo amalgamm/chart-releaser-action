@@ -89,12 +89,16 @@ main() {
       for chart in "${changed_charts[@]}"; do
         if [[ -d "$chart" ]]; then
           package_chart "$chart"
+
+          rm -rf .cr-release-packages
+          mkdir -p .cr-release-packages
+
+          release_charts
         else
           echo "Nothing to do. No chart changes detected."
         fi
       done
 
-      release_charts
       update_index
       echo "changed_charts=$(
         IFS=,
