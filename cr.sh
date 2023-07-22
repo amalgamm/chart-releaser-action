@@ -51,13 +51,11 @@ main() {
   local skip_packaging=
   local skip_existing=
   local mark_as_latest=true
-  local packages_with_index=false
+  local packages_with_index=
 
   parse_command_line "$@"
 
   : "${CR_TOKEN:?Environment variable CR_TOKEN must be set}"
-
-  echo "MULTI_DIR: ${multi_dir[*]}"
 
   local repo_root
   repo_root=$(git rev-parse --show-toplevel)
@@ -90,6 +88,7 @@ main() {
 
       for chart in "${changed_charts[@]}"; do
         if [[ -d "$chart" ]]; then
+          echo $(ls "$chart")
           package_chart "$chart"
         else
           echo "Nothing to do. No chart changes detected."
@@ -120,7 +119,6 @@ main() {
 }
 
 parse_command_line() {
-  echo "ARGS: $@"
   while :; do
     case "${1:-}" in
     -h | --help)
