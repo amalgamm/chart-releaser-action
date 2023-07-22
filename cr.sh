@@ -88,7 +88,6 @@ main() {
 
       for chart in "${changed_charts[@]}"; do
         if [[ -d "$chart" ]]; then
-          echo $(ls "$chart")
           package_chart "$chart"
         else
           echo "Nothing to do. No chart changes detected."
@@ -325,7 +324,7 @@ release_charts() {
     args+=(--make-release-latest=false)
   fi
   if [[ "$packages_with_index" = true ]]; then
-    args+=(--packages-with-index)
+    args+=(--packages-with-index --push)
   fi
 
   echo 'Releasing charts...'
