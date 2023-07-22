@@ -55,7 +55,7 @@ runs:
         repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
 
         args=(--owner "$owner" --repo "$repo")
-        if [[ -z "$multi_dir" ]]; then
+        if [[ -z "${{ inputs.multi_dir }}" ]]; then
           args+=(--charts-dir "${{ inputs.charts_dir }}")
         else
           args+=(--multi-dir "${{ inputs.multi_dir }}")
