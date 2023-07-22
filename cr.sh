@@ -57,7 +57,7 @@ main() {
 
   : "${CR_TOKEN:?Environment variable CR_TOKEN must be set}"
 
-  echo 'MULTI_DIR: $multi_dir'
+  echo "MULTI_DIR: $multi_dir"
 
   local repo_root
   repo_root=$(git rev-parse --show-toplevel)
