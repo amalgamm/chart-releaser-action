@@ -57,7 +57,7 @@ main() {
 
   : "${CR_TOKEN:?Environment variable CR_TOKEN must be set}"
 
-  echo "MULTI_DIR: $multi_dir"
+  echo "MULTI_DIR: ${multi_dir[*]}"
 
   local repo_root
   repo_root=$(git rev-parse --show-toplevel)
@@ -120,6 +120,7 @@ main() {
 }
 
 parse_command_line() {
+  echo "ARGS: $@"
   while :; do
     case "${1:-}" in
     -h | --help)
@@ -160,8 +161,6 @@ parse_command_line() {
       if [[ -n "${2:-}" ]]; then
         IFS=',' read -r -a multi_dir <<< "$2"
         shift
-      else
-        echo "ERROR: '--multi-dir' is not set." >&2
       fi
       ;;
     -o | --owner)
