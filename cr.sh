@@ -18,7 +18,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-DEFAULT_CHART_RELEASER_VERSION=v1.6.0
+DEFAULT_CHART_RELEASER_VERSION=v1.6.1
 
 show_help() {
   cat <<EOF
@@ -51,6 +51,7 @@ main() {
   local skip_packaging=
   local skip_existing=
   local mark_as_latest=true
+  local packages_with_index=
 
   parse_command_line "$@"
 
@@ -209,6 +210,12 @@ parse_command_line() {
         shift
       fi
       ;;
+    -p | --packages-with-index)
+      if [[ -n "${2:-}" ]]; then
+        packages_with_index="$2"
+        shift
+      fi
+      ;;
     *)
       break
       ;;
@@ -252,7 +259,7 @@ install_chart_releaser() {
     mkdir -p "$install_dir"
 
     echo "Installing chart-releaser on $install_dir..."
-    curl -sSLo cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/$version/chart-releaser_${version#v}_linux_amd64.tar.gz"
+    curl -sSLo cr.tar.gz "https://github.com/amalgamm/chart-releaser/releases/download/$version/chart-releaser_${version#v}_linux_amd64.tar.gz"
     tar -xzf cr.tar.gz -C "$install_dir"
     rm -f cr.tar.gz
   fi
@@ -300,7 +307,7 @@ package_chart() {
   if [[ -n "$config" ]]; then
     args+=(--config "$config")
   fi
-
+  echo "Package args: ${args[*]}"
   echo "Packaging chart '$chart'..."
   cr package "${args[@]}"
 }
@@ -316,6 +323,9 @@ release_charts() {
   if [[ "$mark_as_latest" = false ]]; then
     args+=(--make-release-latest=false)
   fi
+  if [[ "$packages_with_index" = true ]]; then
+    args+=(--packages-with-index --push)
+  fi
 
   echo 'Releasing charts...'
   cr upload "${args[@]}"
@@ -325,6 +335,9 @@ update_index() {
   local args=(-o "$owner" -r "$repo" --push)
   if [[ -n "$config" ]]; then
     args+=(--config "$config")
+  fi
+  if [[ "$packages_with_index" = true ]]; then
+    args+=(--packages-with-index)
   fi
 
   echo 'Updating charts repo index...'
