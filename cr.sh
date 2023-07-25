@@ -324,7 +324,7 @@ release_charts() {
     args+=(--make-release-latest=false)
   fi
   if [[ "$packages_with_index" = true ]]; then
-    args+=(--packages-with-index --push)
+    args+=(--packages-with-index)
   fi
 
   echo 'Releasing charts...'
