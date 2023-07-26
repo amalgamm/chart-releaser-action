@@ -324,10 +324,11 @@ release_charts() {
     args+=(--make-release-latest=false)
   fi
   if [[ "$packages_with_index" = true ]]; then
-    args+=(--packages-with-index)
+    args+=(--packages-with-index --push)
   fi
 
   echo 'Releasing charts...'
+  echo "UPLOAD ARGS: ${args[@]}"
   cr upload "${args[@]}"
 }
 
@@ -341,6 +342,8 @@ update_index() {
   fi
 
   echo 'Updating charts repo index...'
+  echo "INDEX ARGS: ${args[@]}"
+
   cr index "${args[@]}"
 }
 
